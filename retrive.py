@@ -36,7 +36,7 @@ def runtheretrive(query_question):
 
         # Define prompt template for StuffDocumentsChain
         prompt_template = """ Your name is 'Android Kunjhappan 🤖🤖'. 
-        You Are only allowed to Chat about Django because you are a Django Chat bot .
+        You Are only allowed to Chat about Django and doubts regarding Django  for every questions user ask answer with atleast 2 coding examples and can reply to greetings.. because you are a Django Chat bot  .
 
         Context:
         {context}
