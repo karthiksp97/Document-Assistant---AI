@@ -246,6 +246,117 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
+# Enhanced CSS for readable UI
+st.markdown("""
+<style>
+/* Chat container styles */
+.chat-container {
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    border-radius: 20px;
+    padding: 2rem;
+    margin: 1rem 0;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+}
+
+.chat-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.chat-header h1 {
+    background: linear-gradient(45deg, #667eea, #764ba2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-size: 2.5rem;
+    margin: 0;
+}
+
+.chat-header p {
+    font-size: 1.2rem;
+    color: #666;
+}
+
+/* Message styles */
+.user-message {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    padding: 1rem;
+    border-radius: 18px;
+    margin: 0.5rem 0;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.assistant-message {
+    background: linear-gradient(135deg, #f093fb, #f5576c);
+    color: white;
+    padding: 1rem;
+    border-radius: 18px;
+    margin: 0.5rem 0;
+    box-shadow: 0 4px 15px rgba(245, 87, 108, 0.3);
+}
+
+.timestamp {
+    font-size: 0.8em;
+    opacity: 0.8;
+    margin-top: 0.5rem;
+}
+
+/* Typing indicator */
+.typing-indicator {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 1rem;
+    background: linear-gradient(135deg, #a8edea, #fed6e3);
+    border-radius: 18px;
+    color: #333;
+}
+
+.typing-dots {
+    display: flex;
+    gap: 4px;
+}
+
+.typing-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #667eea;
+    animation: typing 1.4s infinite ease-in-out;
+}
+
+.typing-dot:nth-child(1) { animation-delay: -0.32s; }
+.typing-dot:nth-child(2) { animation-delay: -0.16s; }
+
+@keyframes typing {
+    0%, 80%, 100% { transform: scale(0); opacity: 0.5; }
+    40% { transform: scale(1); opacity: 1; }
+}
+
+/* Sidebar styles */
+.sidebar-content {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    padding: 1rem;
+    border-radius: 10px;
+    margin: 1rem 0;
+}
+</style>
+""", unsafe_allow_html=True)
+
+# --- Chat Header ---
+st.markdown("""
+<div class="chat-container">
+    <div class="chat-header">
+        <h1>🤖 AI Chat Assistant</h1>
+        <p>Your friendly AI companion for conversations</p>
+    </div>
+</div>
+""", unsafe_allow_html=True)
+
+
+
 # --- Sidebar ---
 with st.sidebar:
     st.markdown("### 🤖 Chat Assistant")
@@ -278,16 +389,6 @@ with st.sidebar:
     chat_theme = st.selectbox("Choose Theme:", ["Default", "Dark Mode", "Ocean", "Sunset"], index=0)
     response_speed = st.slider("Response Speed", 0.01, 0.2, 0.05, 0.01, help="Adjust how fast the AI types")
 
-# --- Chat Header ---
-st.markdown("""
-<div class="chat-container">
-    <div class="chat-header">
-        <h1>🤖 AI Chat Assistant</h1>
-        <p>Your friendly AI companion for conversations</p>
-    </div>
-</div>
-""", unsafe_allow_html=True)
-
 # --- Display previous messages ---
 for message in st.session_state.messages:
     with st.chat_message(message["role"], avatar="👤" if message["role"] == "user" else "🤖"):
@@ -316,7 +417,12 @@ with col2:
             "How are you doing today?"
         ]
         prompt = random.choice(starters)
-
+st.markdown("""
+<div style="text-align: center; margin: 2rem 0; padding: 1rem; background: linear-gradient(45deg, #f093fb, #f5576c); border-radius: 15px; color: white;">
+    <h3 style="margin: 0;">🎯 Built with Passion by Karthikeyan S.P</h3>
+    <p style="margin: 0.5rem 0; opacity: 0.9;">Crafting the Future of AI Conversations</p>
+</div>
+""", unsafe_allow_html=True)
 # --- Process Prompt ---
 if prompt:
     current_time = datetime.now().strftime('%H:%M:%S')
@@ -393,10 +499,8 @@ if prompt:
         "timestamp": response_time
     })
 
-# --- Additional Developer Credit in Content Area ---
-st.markdown("""
-<div style="text-align: center; margin: 2rem 0; padding: 1rem; background: linear-gradient(45deg, #f093fb, #f5576c); border-radius: 15px; color: white;">
-    <h3 style="margin: 0;">🎯 Built with Passion by Karthikeyan S.P</h3>
-    <p style="margin: 0.5rem 0; opacity: 0.9;">Crafting the Future of AI Conversations</p>
-</div>
-""", unsafe_allow_html=True)
+    
+
+    # Force re-render to ensure UI updates with the new message
+    st.rerun()
+

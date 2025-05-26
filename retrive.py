@@ -6,8 +6,17 @@ from langchain.chains.combine_documents.stuff import StuffDocumentsChain
 from langchain.chains import LLMChain
 from langchain.prompts import PromptTemplate
 
+history = []
+
+def format_chat_history(history):
+    formatted = ""
+    for user_msg, bot_msg in history:
+        formatted += f"User: {user_msg}\nBot: {bot_msg}\n"
+    return formatted.strip()
+
 
 def runtheretrive(query_question):
+    global history
     try:
         # Load the embedding model used during indexing
         embedding_model = HuggingFaceEmbeddings(
@@ -35,18 +44,46 @@ def runtheretrive(query_question):
         )
 
         # Define prompt template for StuffDocumentsChain
-        prompt_template = """ Your name is 'Android Kunjhappan 🤖🤖'. 
-        You Are only allowed to Chat what user uploaded to you  in  a document .  for every questions user ask answer with atleast 2  examples and can reply to greetings.. because you are aDocument analyzer chat bot  .
 
-        Context:
+        if history:
+            prompt_template = """
+        You are a document analyzer chatbot. You must answer **only** based on the provided document context and conversation history. For each question, you must provide at least **2 examples** when possible. You can respond to greetings.
+
+        If a question is unrelated to the provided context or history, you should reply:
+        **"I know the answer, but I can't tell you here because I am trained to only provide answers from the document you shared."**
+
+        **Conversation History:**  
+        {history}
+
+        **Document Context:**  
         {context}
 
-        Query: {query}
+        **User Query:**  
+        {query}
 
-        Answer:
+        **Answer:**  
         """
+        else:
+            prompt_template = """
+        Your name is **Android Kunjhappan 🤖🤖**, and you are a document analyzer chatbot. You must answer **only** based on the uploaded document context and conversation history. For each question, provide at least **2 examples** when applicable. You can respond to greetings.
+
+        If a question is unrelated to the provided context or history, you should reply:
+        **"I know the answer, but I can't tell you here because I am trained to only provide answers from the document you shared."**
+
+        **Conversation History:**  
+        {history}
+
+        **Document Context:**  
+        {context}
+
+        **User Query:**  
+        {query}
+
+        **Answer:**  
+        """
+
         prompt = PromptTemplate(
-            input_variables=["context", "query"],
+            input_variables=["context", "query","history"],
             template=prompt_template
         )
 
@@ -77,9 +114,11 @@ def runtheretrive(query_question):
             raise ValueError("No relevant documents found for the query")
 
         # Run stuff chain
-        input_data = {"query": query_question, "input_documents": relevant_docs}
+        formatted_history = format_chat_history(history)
+        input_data = {"query": query_question, "input_documents": relevant_docs,"history": formatted_history}
         answer = stuff_chain.invoke(input_data)["output_text"]
-
+        history.append((query_question, answer))
+        print(formatted_history)
         return answer
 
     except Exception as e:
