@@ -16,7 +16,7 @@ def get_file_hash(file_path):
 try:
     # Verify PDF file exists
     # pdf_path = "django_documentation/django-readthedocs-io-en-5.2.x.pdf"
-    pdf_path = "resume/resume.pdf"
+    pdf_path = "django_documentation/testing.pdf"
     if not os.path.exists(pdf_path):
         raise FileNotFoundError(f"PDF file not found at {pdf_path}")
 
