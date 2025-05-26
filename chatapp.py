@@ -239,7 +239,7 @@ st.markdown("""
         <div class="developer-badges">
             <span class="badge">🤖 AI Expert</span>
             <span class="badge">💻 Python Developer</span>
-            <span class="badge">🎨 UI/UX Designer</span>
+            <span class="badge">🎨Gen AI</span>
             <span class="badge">⚡ Innovation Leader</span>
         </div>
     </div>
